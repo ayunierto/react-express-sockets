@@ -7,10 +7,19 @@ import { PORT } from './config.js' //si vamos a tarer nuestros propios modulos t
 
 const app = express()
 const server = http.createServer(app)
-const io = new SockerServer(server)
+const io = new SockerServer(server, {
+    cors: {
+        origin: '*' // para que se conecte cualquier servidor
+    }
+})
 
 app.use(cors)
 app.use(morgan('dev'))
 
-app.listen(PORT)
+io.on('connection', (socket) => {
+    console.log(socket.id)
+    console.log('a user connected')
+})
+
+server.listen(PORT)
 console.log('server on port ' + PORT)
